@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { connection } from '../config/database';
+import connection from '../config/database';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 

@@ -1,7 +1,7 @@
 // filepath: c:\asset-inventory\server\src\controllers\inventory.controller.ts
 import { Request, Response } from 'express';
 import { AuthRequest } from '../types/express';
-import { connection } from '../config/database';  
+import connection from '../config/database';  
 import { ResultSetHeader } from 'mysql2';
 
 export const getInventoryItems = async (req: AuthRequest, res: Response): Promise<void> => {

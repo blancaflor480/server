@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../types/express';
-import { connection } from '../config/database';
+import connection from '../config/database';
 import crypto from 'crypto';
 
 export const getAccounts = async (req: AuthRequest, res: Response): Promise<void> => {
