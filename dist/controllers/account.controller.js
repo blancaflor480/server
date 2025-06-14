@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAccount = exports.updateAccount = exports.createAccount = exports.getAccounts = void 0;
-const database_1 = require("../config/database");
+const database_1 = __importDefault(require("../config/database"));
 const crypto_1 = __importDefault(require("crypto"));
 const getAccounts = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ const getAccounts = async (req, res) => {
         const offset = (page - 1) * limit;
         const roleFilter = req.query.roleFilter;
         const sortOrder = req.query.sortOrder?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const whereConditions = [];
         const params = [];
         if (roleFilter) {
@@ -56,7 +56,7 @@ const createAccount = async (req, res) => {
             res.status(400).json({ message: 'Required fields missing' });
             return;
         }
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [existing] = await conn.execute('SELECT id FROM admin_users WHERE email = ?', [email]);
         if (existing.length > 0) {
             res.status(409).json({ message: 'Email already exists' });
@@ -80,7 +80,7 @@ const updateAccount = async (req, res) => {
     try {
         const { id } = req.params;
         const { username, email, password, role, status } = req.body;
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [existing] = await conn.execute('SELECT id FROM admin_users WHERE id = ?', [id]);
         if (!existing.length) {
             res.status(404).json({ message: 'Account not found' });
@@ -141,7 +141,7 @@ exports.updateAccount = updateAccount;
 const deleteAccount = async (req, res) => {
     try {
         const { id } = req.params;
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         await conn.execute('DELETE FROM admin_users WHERE id = ?', [id]);
         res.json({ message: 'Account deleted successfully' });
     }

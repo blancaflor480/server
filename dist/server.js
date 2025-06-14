@@ -12,7 +12,15 @@ const account_1 = __importDefault(require("./routes/account"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
-app.use((0, cors_1.default)());
+const corsOptions = {
+    origin: [
+        'https://linen-snake-138010.hostingersite.com',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
 app.use('/api/auth', auth_1.default);
 app.use('/api/inventory', inventory_1.default);

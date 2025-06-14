@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = void 0;
-const database_1 = require("../config/database");
+const database_1 = __importDefault(require("../config/database"));
 const crypto_1 = __importDefault(require("crypto"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const login = async (req, res) => {
@@ -17,7 +17,7 @@ const login = async (req, res) => {
         }
         const hashedPassword = crypto_1.default.createHash('md5').update(password).digest('hex');
         console.log('Hashed password:', hashedPassword);
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [rows] = await conn.execute('SELECT * FROM admin_users WHERE email = ? AND password = ?', [email, hashedPassword]);
         if (!rows || rows.length === 0) {
             console.log('No user found with email:', email);

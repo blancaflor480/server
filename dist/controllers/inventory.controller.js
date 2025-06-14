@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSerialNo = exports.validateModelNo = exports.deleteInventoryItem = exports.updateInventoryItem = exports.createInventoryItem = exports.getInventoryItems = void 0;
-const database_1 = require("../config/database");
+const database_1 = __importDefault(require("../config/database"));
 const getInventoryItems = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -14,7 +17,7 @@ const getInventoryItems = async (req, res) => {
         const condition_status = req.query.condition_status;
         const sortBy = req.query.sortBy;
         const sortOrder = req.query.sortOrder?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const whereConditions = [];
         const params = [];
         if (search) {
@@ -74,7 +77,7 @@ const getInventoryItems = async (req, res) => {
 exports.getInventoryItems = getInventoryItems;
 const createInventoryItem = async (req, res) => {
     try {
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [lastItem] = await conn.execute('SELECT tag_id FROM inventory_items ORDER BY id DESC LIMIT 1');
         let newIdNumber = 1;
         if (lastItem && lastItem[0]?.tag_id) {
@@ -157,7 +160,7 @@ const updateInventoryItem = async (req, res) => {
             res.status(400).json({ message: 'ID is required for updates' });
             return;
         }
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [existing] = await conn.execute('SELECT id FROM inventory_items WHERE id = ?', [id]);
         if (!existing.length) {
             res.status(404).json({ message: 'Asset not found' });
@@ -220,7 +223,7 @@ exports.updateInventoryItem = updateInventoryItem;
 const deleteInventoryItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         await conn.execute('DELETE FROM inventory_items WHERE id = ?', [id]);
         res.json({ message: 'Inventory item deleted successfully' });
     }
@@ -233,7 +236,7 @@ exports.deleteInventoryItem = deleteInventoryItem;
 const validateModelNo = async (req, res) => {
     try {
         const { modelNo } = req.params;
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [rows] = await conn.execute('SELECT id FROM inventory_items WHERE model_no = ?', [modelNo]);
         res.json({ exists: rows.length > 0 });
     }
@@ -246,7 +249,7 @@ exports.validateModelNo = validateModelNo;
 const validateSerialNo = async (req, res) => {
     try {
         const { serialNo } = req.params;
-        const conn = await database_1.connection;
+        const conn = await database_1.default;
         const [rows] = await conn.execute('SELECT id FROM inventory_items WHERE serial_no = ?', [serialNo]);
         res.json({ exists: rows.length > 0 });
     }
